@@ -1,0 +1,3 @@
+@PACKAGE_INIT@ 
+
+set_and_check ( libsimd_INCLUDE_DIRS "@PACKAGE_libsimd_INCLUDE_DIRS@")
