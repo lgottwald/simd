@@ -128,6 +128,11 @@ public:
     */
    void aligned_store( T* mem ) const;
 
+   /**
+    * Stores this packs elements to a memory location.
+    */
+   void store( T* mem ) const;
+
 private:
 
    union
@@ -200,6 +205,31 @@ inline pack<REAL> aligned_load( ITER aligned_ptr )
 {
    ASSERT_ALIGNED( aligned_ptr );
    return SIMD_INTRIN( load_ps )( &(*aligned_ptr) );
+}
+
+/**
+ * Loads a simd::pack<double>::size() elements from the given memory
+ * location into a simd register and returns the packed double
+ * representing the values in the register.
+ */
+
+template<typename ITER, typename REAL = typename std::iterator_traits<ITER>::value_type,
+        typename std::enable_if<std::is_same<double,REAL>::value, int>::type enable = 0 >
+inline pack<REAL> load( ITER ptr )
+{
+   return SIMD_INTRIN( loadu_pd )( &(*ptr) );
+}
+
+/**
+ * Loads a simd::pack<float>::size() elements from the given memory
+ * location into a simd register and returns the packed double
+ * representing the values in the register.
+ */
+template<typename ITER, typename REAL = typename std::iterator_traits<ITER>::value_type,
+         typename std::enable_if<std::is_same<float,REAL>::value, int>::type enable = 0>
+inline pack<REAL> load( ITER ptr )
+{
+   return SIMD_INTRIN( loadu_ps )( &(*ptr) );
 }
 
 template<typename ITER>
@@ -287,6 +317,19 @@ inline void pack<float>::aligned_store( float* mem ) const
 {
    ASSERT_ALIGNED( mem );
    return SIMD_INTRIN( store_ps )( mem, xmm_ );
+}
+
+/* specializations for floats and doubles */
+template<>
+inline void pack<double>::store( double* mem ) const
+{
+   return SIMD_INTRIN( storeu_pd )( mem, xmmd_ );
+}
+
+template<>
+inline void pack<float>::store( float* mem ) const
+{
+   return SIMD_INTRIN( storeu_ps )( mem, xmm_ );
 }
 
 template<>

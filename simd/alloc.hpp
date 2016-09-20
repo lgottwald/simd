@@ -16,7 +16,7 @@ namespace simd
 /**
  * Defines a type for an aligned array of type T whith size SIZE
  * Example usage:
- * aligned_array<double, 20>::type elems;
+ * aligned_static_array<double, 20> elems;
  * for(int i=0;i<20;++i)
  * elems[i] = x+i*h;
  */
